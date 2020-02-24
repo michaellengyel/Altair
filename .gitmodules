@@ -1,0 +1,3 @@
+[submodule "Altair/vendor/spdlog"]
+	path = Altair/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git
