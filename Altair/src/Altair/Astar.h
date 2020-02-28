@@ -19,10 +19,7 @@ public:
 	Astar::~Astar() {}
 
 	// Method must be public and static to support __declspec(dllexport)
-	static void Run();
-
-	// Method must be public and static to support __declspec(dllexport)
-	static double bubbleSort(int* nodeVector, int size);
+	static double Run(int* nodeVector, int size);
 };
 
 }

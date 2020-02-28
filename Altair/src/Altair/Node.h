@@ -15,10 +15,12 @@ public:
 	// Member function declaration
 	double absoluteLength();
 
+	// Getters
 	int getx() { return m_x; }
 	int gety() { return m_y; }
 	int getz() { return m_z; }
 
+	// Setters
 	void setx(int x) { m_x = x; }
 	void sety(int y) { m_y = y; }
 	void setz(int z) { m_z = z; }

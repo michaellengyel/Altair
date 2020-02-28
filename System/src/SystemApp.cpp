@@ -19,34 +19,11 @@ int main(int argc, char** argv) {
 	Altair::Print();
 
 	Altair::Astar a;
-	a.Run();
 
 	int values[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-	double result = a.bubbleSort(values, 11);
+	double result = a.Run(values, 11);
 	std::cout << result << std::endl;
 	// End example code
 
 	return 0;
 }
-
-/*
-class System : public Altair::Application
-{
-public:
-	System()
-	{
-
-	}
-
-	~System()
-	{
-
-	}
-};
-
-
-Altair::Application* Altair::CreateApplication()
-{
-	return new System();
-}
-*/

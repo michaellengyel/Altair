@@ -7,13 +7,7 @@ void Print() {
 	ALTAIR_CORE_TRACE("Calling Print()");
 }
 
-
-void Astar::Run()
-{
-	ALTAIR_CORE_TRACE("Calling Run()");
-}
-
-double Astar::bubbleSort(int* nodeVector, int size) {
+double Astar::Run(int* nodeVector, int size) {
 
 	double mixed = 0;
 
