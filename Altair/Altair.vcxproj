@@ -140,14 +140,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Altair.h" />
-    <ClInclude Include="src\Altair\Application.h" />
+    <ClInclude Include="src\Altair\Astar.h" />
     <ClInclude Include="src\Altair\Core.h" />
-    <ClInclude Include="src\Altair\EntryPoint.h" />
     <ClInclude Include="src\Altair\Log.h" />
+    <ClInclude Include="src\Altair\Node.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Altair\Application.cpp" />
+    <ClCompile Include="src\Altair\Astar.cpp" />
     <ClCompile Include="src\Altair\Log.cpp" />
+    <ClCompile Include="src\Altair\Node.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
