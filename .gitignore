@@ -6,3 +6,5 @@ Debug/
 
 # Files
 *.user
+.vcxproj
+.filters
