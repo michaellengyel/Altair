@@ -1,3 +1,6 @@
 [submodule "Altair/vendor/spdlog"]
 	path = Altair/vendor/spdlog
 	url = https://github.com/gabime/spdlog.git
+[submodule "Altair/vendor/googletest"]
+	path = Altair/vendor/googletest
+	url = https://github.com/google/googletest.git
