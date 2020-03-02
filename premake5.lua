@@ -43,6 +43,7 @@ project "Altair"
 
 		postbuildcommands
 		{
+			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/UnitTest"),
 			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/System")
 		}
 
@@ -128,8 +129,7 @@ project "GoogleTest"
 	includedirs
 	{
 		"Altair/vendor/googletest/googletest/include",
-		"Altair/vendor/googletest/googletest"
-		--"Altair/src"
+		"Altair/vendor/googletest/googletest",
 	}
 
 	links
@@ -178,8 +178,10 @@ project "UnitTest"
 	{
 		"Altair/vendor/googletest/googletest/include",
 		"Altair/vendor/googletest/googletest",
-		"Altair/src",
-		"Altair/src/Altair"
+		"Altair/vendor/spdlog/include",
+		"Altair/src"
+		--"Altair/src/Altair",
+,
 	}
 
 	links

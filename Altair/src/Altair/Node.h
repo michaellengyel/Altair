@@ -1,9 +1,11 @@
-//TODO: Remove example class
+// TODO: Remove example class
 #pragma once
+
+#include "Core.h"
 
 namespace Altair {
 
-class Node {
+class ALTAIR_API Node {
 public:
 
 	// Constructor

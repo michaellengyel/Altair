@@ -14,9 +14,8 @@ class ALTAIR_API Astar
 {
 public:
 
-	Astar::Astar() {}
-
-	Astar::~Astar() {}
+	Astar() {}
+	~Astar() {}
 
 	// Method must be public and static to support __declspec(dllexport)
 	static double Run(int* nodeVector, int size);
