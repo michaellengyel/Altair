@@ -1,5 +1,5 @@
 workspace "Altair"
-	architecture "x86"
+	architecture "x64"
 
 	configurations
 	{
