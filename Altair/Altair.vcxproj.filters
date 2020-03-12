@@ -7,10 +7,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Altair.h" />
+    <ClInclude Include="src\Altair\ANode.h">
+      <Filter>Altair</Filter>
+    </ClInclude>
     <ClInclude Include="src\Altair\Astar.h">
       <Filter>Altair</Filter>
     </ClInclude>
     <ClInclude Include="src\Altair\Core.h">
+      <Filter>Altair</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Altair\ImageGraph.h">
       <Filter>Altair</Filter>
     </ClInclude>
     <ClInclude Include="src\Altair\Log.h">
@@ -24,7 +30,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Altair\ANode.cpp">
+      <Filter>Altair</Filter>
+    </ClCompile>
     <ClCompile Include="src\Altair\Astar.cpp">
+      <Filter>Altair</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Altair\ImageGraph.cpp">
       <Filter>Altair</Filter>
     </ClCompile>
     <ClCompile Include="src\Altair\Log.cpp">

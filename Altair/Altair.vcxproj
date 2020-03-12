@@ -143,14 +143,18 @@ IF EXIST ..\bin\Distribution-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Altair.h" />
+    <ClInclude Include="src\Altair\ANode.h" />
     <ClInclude Include="src\Altair\Astar.h" />
     <ClInclude Include="src\Altair\Core.h" />
+    <ClInclude Include="src\Altair\ImageGraph.h" />
     <ClInclude Include="src\Altair\Log.h" />
     <ClInclude Include="src\Altair\Node.h" />
     <ClInclude Include="src\Altair\Visuals.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Altair\ANode.cpp" />
     <ClCompile Include="src\Altair\Astar.cpp" />
+    <ClCompile Include="src\Altair\ImageGraph.cpp" />
     <ClCompile Include="src\Altair\Log.cpp" />
     <ClCompile Include="src\Altair\Node.cpp" />
     <ClCompile Include="src\Altair\Visuals.cpp" />
