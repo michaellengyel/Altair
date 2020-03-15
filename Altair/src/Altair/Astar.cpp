@@ -2,11 +2,15 @@
 
 void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, int pathWeight, int elevationWeight, int euclidianWeight) {
 
-	nodeStart = ANode(nodeX, nodeY, nodeX, nodeY);
-	nodeEnd = ANode(goalX, goalY, 0, 0);
+	// Initializing the Start and End node:
+	int temp = imageGraph.getPixelValue(nodeX, nodeY);
+	nodeStart = ANode(nodeX, nodeY, nodeX, nodeY, imageGraph.getPixelValue(nodeX, nodeY));
+	nodeEnd = ANode(goalX, goalY, 0, 0, imageGraph.getPixelValue(goalX, goalY));
 
+	// Adding the initial node to the openSet:
 	openSet.push_back(nodeStart);
 
+	// Repeat
 	while (!openSet.empty()) {
 
 		// Find the lowest cost node in the openSet
@@ -62,7 +66,7 @@ void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, i
 		}
 
 		// Keeping track of open and closed setSize
-		cout << openSet.size() << ", " << closedSet.size() << endl;
+		//cout << openSet.size() << ", " << closedSet.size() << endl;
 		
 	}
 
@@ -73,53 +77,59 @@ void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, i
 
 }
 
-int AStar::calculateNodePathCost(ANode& nodeCurrent, int pathWeight) {
-	// Calculating the path cost:
-	// If node is next to parent node (1) (And delta elevation)
-	int nodePathCost = nodeCurrent.getNodePathCost();
-	if ((nodeCurrent.getNodeX() == nodeCurrent.getParentX()) || (nodeCurrent.getNodeY() == nodeCurrent.getParentY())) {
-		nodePathCost += 10;//sqrt(pow(1, 2) + pow((m_nodeElevation - m_parentElevation), 2));
+double AStar::calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int pathWeight, int elevationWeight) {
+
+	bool xAdjacent = (nodeCurrent.getNodeX() == node.getNodeX());
+	bool yAdjacent = (nodeCurrent.getNodeY() == node.getNodeY());
+	
+	double nodePathCost = nodeCurrent.getNodePathCost();
+	int nodeElevation = node.getElevation();
+	int nodeCurrentElevation = nodeCurrent.getElevation();
+	double deltaNodeElevationPow = pow((nodeElevation - nodeCurrentElevation), 2);
+
+	// Testing if elevationWeight should not be used as a heuristic.
+	nodePathCost += (abs(node.getElevation() - nodeCurrent.getElevation()) * elevationWeight);
+
+	// If node is next to parent node (1) plus the delta elevation
+	if (xAdjacent || yAdjacent) {
+		// Where 1 is pow(1, 2)
+		nodePathCost += sqrt(1 + deltaNodeElevationPow);
 	}
-	// Else its diagonal (1.4) (And delta elevation)
+	// Else its diagonal (1.4) plus the delta elevation
 	else {
-		nodePathCost += 14;// sqrt(pow(1.414213f, 2) + pow((m_nodeElevation - m_parentElevation), 2));
+		// Where 2 is pow(1.414, 2)
+		nodePathCost += sqrt(2 + deltaNodeElevationPow);
 	}
 
 	return nodePathCost * pathWeight;
 }
 
-int AStar::calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goalY, int elevationWeight, int euclidianWeight) {
-	// Calculating the path cost:
-	// If node is next to parent node (1) (And delta elevation)
-	float nodeCost = 0;
+double AStar::calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goalY, int elevationWeight, int euclidianWeight) {
 
+	double nodeCost = 0;
 	nodeCost = nodeCurrent.getNodePathCost();
 
 	// Calculating the height cost
-	nodeCost += abs(imageGraph.getPixelValue(node.getNodeX(), node.getNodeY()) - imageGraph.getPixelValue(nodeCurrent.getNodeX(), nodeCurrent.getNodeY())) * elevationWeight;
-	//nodeCost += imageParser.getPixelValue(node.getNodeX(), node.getNodeY()) * elevationWeight;
-	//nodeCost += 255 - imageParser.getPixelValue(node.getNodeX(), node.getNodeY()) * elevationWeight;
+	// nodeCost += (abs(node.getElevation() - nodeCurrent.getElevation()) * elevationWeight);
 
 	// Calculating the distance cost
-	//nodeCost += sqrt(pow(nodeCurrent.getNodeX() - goalCoordinateX, 2) + pow(nodeCurrent.getNodeY() - goalCoordinateY, 2)) * 1.4;
-	//nodeCost += pow(nodeCurrent.getNodeX() - goalCoordinateX, 2) + pow(nodeCurrent.getNodeY() - goalCoordinateY, 2);
-	nodeCost += (abs(nodeCurrent.getNodeX() - goalX) + abs(nodeCurrent.getNodeY() - goalY)) * euclidianWeight;
+	nodeCost += ((sqrt(pow(node.getNodeX() - goalX, 2) + pow(node.getNodeY() - goalY, 2))) * euclidianWeight);
 
 	return nodeCost;
 }
 
-void AStar::expandNode(ImageGraph& imageParser, ANode& nodeCurrent, int x, int y, int goalX, int goalY, int pathWeight, int elevationWeight, int euclidianWeight) {
+void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, int pathWeight, int elevationWeight, int euclidianWeight) {
 	// local variables:
 	int nodeCurrentX = nodeCurrent.getNodeX();
 	int nodeCurrentY = nodeCurrent.getNodeY();
 	
 	// Check if node to be created is not outside the boundary of the image
-	bool rightFree = (nodeCurrentX + x < imageParser.getImageWidth() - 1);
-	bool topFree = (nodeCurrentY + y > 0);
-	bool leftFree = (nodeCurrentX + x > 0);
-	bool bottomFree = (nodeCurrentY +   y < imageParser.getImageHeight() - 1);
+	bool rightFree = (nodeCurrentX + x < imageGraph.getImageWidth());
+	bool topFree = (nodeCurrentY + y >= 0);
+	bool leftFree = (nodeCurrentX + x >= 0);
+	bool bottomFree = (nodeCurrentY +   y < imageGraph.getImageHeight());
 
-	if (rightFree && topFree && leftFree && bottomFree) {
+	if ((rightFree && topFree) && (leftFree && bottomFree)) {
 		// Iterate through closed Set to check if the node we are about to create has already been expanded.
 		bool nodeIsExpended = false;
 		int sizeClosed = closedSet.size() - 1;
@@ -149,9 +159,9 @@ void AStar::expandNode(ImageGraph& imageParser, ANode& nodeCurrent, int x, int y
 			// Parent and child node states (todo)
 
 			// Create a new node
-			ANode node = ANode(nodeCurrentX + x, nodeCurrentY + y, nodeCurrentX, nodeCurrentY);
-			node.setNodePathCost(calculateNodePathCost(nodeCurrent, pathWeight));
-			node.setNodeCost(calculateNodeCost(imageParser, nodeCurrent, node, goalX, goalY, elevationWeight, euclidianWeight));
+			ANode node = ANode(nodeCurrentX + x, nodeCurrentY + y, nodeCurrentX, nodeCurrentY, imageGraph.getPixelValue(nodeCurrentX + x, nodeCurrentY + y));
+			node.setNodePathCost(calculateNodePathCost(imageGraph, nodeCurrent, node, pathWeight, elevationWeight));
+			node.setNodeCost(calculateNodeCost(imageGraph, nodeCurrent, node, goalX, goalY, elevationWeight, euclidianWeight));
 			// Node states
 			bool xCoordsMatch = (openSet.at(openedNodeID).getNodeX() == nodeCurrentX + x);
 			bool yCoordsMatch = (openSet.at(openedNodeID).getNodeY() == nodeCurrentY + y);

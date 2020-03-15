@@ -16,9 +16,9 @@ int ImageGraph::getImageHeight() {
 }
 
 void ImageGraph::setPixelValue(int xCoord, int yCoord, int pixel) {
-	vectorImage[xCoord * yCoord + xCoord] = pixel;
+	vectorImage[yCoord * getImageWidth() + xCoord] = pixel;
 }
 
-uint8_t ImageGraph::getPixelValue(int xCoord, int yCoord) {
-	return vectorImage[xCoord * yCoord + xCoord];
+int ImageGraph::getPixelValue(int xCoord, int yCoord) {
+	return vectorImage[yCoord * getImageWidth() + xCoord];
 }

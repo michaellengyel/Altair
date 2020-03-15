@@ -33,15 +33,19 @@ public:
 
 private:
 
+	// A struct used to represent the node as a x and y coordinate when passing the path back to the user (system)
 	struct Point {
 		int xCoord;
 		int yCoord;
 	};
 
-	int calculateNodePathCost(ANode& nodeCurrent, int pathWeight);
+	// Calculate the cost of the node based on the path (distance which needs to be driven to get to node)
+	double calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int pathWeight, int elevationWeight);
 
-	int calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goaleY, int elevationWeight, int euclidianWeight);
+	// Calculate the heuristics (Euclidian distance, Elevation)
+	double calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goaleY, int elevationWeight, int euclidianWeight);
 
+	// Open the nodes adjasent the current node
 	void expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, int pathWeight, int elevationWeight, int euclidianWeight);
 
 	void traceBackPath(ANode nodeStart, ANode nodeCurrent);
@@ -55,6 +59,8 @@ private:
 	ANode nodeStart;
 	ANode nodeEnd;
 	ANode nodeCurrent;
+
+	const double SQRTWO = 1.414213562373095;
 
 	// Container for the OPEN set
 	vector<ANode> openSet;

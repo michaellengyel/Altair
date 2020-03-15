@@ -20,7 +20,7 @@ public:
 
 	void setPixelValue(int xCoord, int yCoord, int pixel);
 
-	uint8_t getPixelValue(int xCoord, int yCoord);
+	int getPixelValue(int xCoord, int yCoord);
 
 private:
 	int m_xSize;
