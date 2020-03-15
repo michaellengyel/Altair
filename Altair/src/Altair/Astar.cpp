@@ -1,9 +1,8 @@
 #include "AStar.h"
 
-void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, int pathWeight, int elevationWeight, int euclidianWeight) {
+void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
 
 	// Initializing the Start and End node:
-	int temp = imageGraph.getPixelValue(nodeX, nodeY);
 	nodeStart = ANode(nodeX, nodeY, nodeX, nodeY, imageGraph.getPixelValue(nodeX, nodeY));
 	nodeEnd = ANode(goalX, goalY, 0, 0, imageGraph.getPixelValue(goalX, goalY));
 
@@ -61,12 +60,12 @@ void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, i
 		for (int i = 0; i < openSet.size(); i++) {
 			if (nodeCurrent.getNodeX() == openSet.at(i).getNodeX() && nodeCurrent.getNodeY() == openSet.at(i).getNodeY()) {
 				openSet.erase(openSet.begin() + i);
-				//break;
+				// break;
 			}
 		}
 
 		// Keeping track of open and closed setSize
-		//cout << openSet.size() << ", " << closedSet.size() << endl;
+		cout << openSet.size() << ", " << closedSet.size() << endl;
 		
 	}
 
@@ -77,7 +76,7 @@ void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, i
 
 }
 
-double AStar::calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int pathWeight, int elevationWeight) {
+double AStar::calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, double pathWeight, double elevationWeight) {
 
 	bool xAdjacent = (nodeCurrent.getNodeX() == node.getNodeX());
 	bool yAdjacent = (nodeCurrent.getNodeY() == node.getNodeY());
@@ -88,7 +87,7 @@ double AStar::calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, 
 	double deltaNodeElevationPow = pow((nodeElevation - nodeCurrentElevation), 2);
 
 	// Testing if elevationWeight should not be used as a heuristic.
-	nodePathCost += (abs(node.getElevation() - nodeCurrent.getElevation()) * elevationWeight);
+	nodePathCost += (static_cast<double>(abs(node.getElevation() - nodeCurrent.getElevation())) * elevationWeight);
 
 	// If node is next to parent node (1) plus the delta elevation
 	if (xAdjacent || yAdjacent) {
@@ -104,13 +103,13 @@ double AStar::calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, 
 	return nodePathCost * pathWeight;
 }
 
-double AStar::calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goalY, int elevationWeight, int euclidianWeight) {
+double AStar::calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goalY, double elevationWeight, double euclidianWeight) {
 
 	double nodeCost = 0;
 	nodeCost = nodeCurrent.getNodePathCost();
 
 	// Calculating the height cost
-	// nodeCost += (abs(node.getElevation() - nodeCurrent.getElevation()) * elevationWeight);
+	// nodeCost += (static_cast<double>(abs(node.getElevation() - nodeCurrent.getElevation())) * elevationWeight);
 
 	// Calculating the distance cost
 	nodeCost += ((sqrt(pow(node.getNodeX() - goalX, 2) + pow(node.getNodeY() - goalY, 2))) * euclidianWeight);
@@ -118,7 +117,7 @@ double AStar::calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANod
 	return nodeCost;
 }
 
-void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, int pathWeight, int elevationWeight, int euclidianWeight) {
+void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
 	// local variables:
 	int nodeCurrentX = nodeCurrent.getNodeX();
 	int nodeCurrentY = nodeCurrent.getNodeY();

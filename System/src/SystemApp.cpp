@@ -36,9 +36,11 @@ int main(int argc, char** argv) {
 	int nodeY = 0;
 	int goalX = 56;
 	int goalY = 56;
-	int pathWeight = 1;
-	int elevationWeight = 1;
-	int euclidianWeight = 4;
+	double pathWeight = 1;
+	double elevationWeight = 0.1;
+	double euclidianWeight = 1;
+
+	const int IMAGE_MAGNIFICATION = 8;
 
 	AStar astar;
 	astar.astarAlgo(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
@@ -46,7 +48,7 @@ int main(int argc, char** argv) {
 	
 	for (int i = 0; i < astar.closedSetClean.size(); i++) {
 		imageParser.imageDrawLine(astar.closedSetClean.at(i).xCoord, astar.closedSetClean.at(i).yCoord, astar.closedSetClean.at(i).xCoord, astar.closedSetClean.at(i).yCoord, 0, 0, 255, 1);
-		imageParser.userResize(2);
+		imageParser.userResize(IMAGE_MAGNIFICATION);
 		imageParser.imageShow("Map");
 		cv::waitKey(1);
 		imageParser.userResize(1);
@@ -56,13 +58,13 @@ int main(int argc, char** argv) {
 	// Drawing of the path moved from Altair dll to the System
 	for (int i = 0; i < astar.finalSetClean.size(); i++) {
 		imageParser.imageDrawLine(astar.finalSetClean.at(i).xCoord, astar.finalSetClean.at(i).yCoord, astar.finalSetClean.at(i).xCoord, astar.finalSetClean.at(i).yCoord, 0, 255, 0, 1);
-		imageParser.userResize(4); // Resize
+		imageParser.userResize(IMAGE_MAGNIFICATION); // Resize
 		imageParser.imageShow("Map");
 		cv::waitKey(1);
 		imageParser.userResize(1);
 	}
 
-	imageParser.userResize(4); // Resize
+	imageParser.userResize(IMAGE_MAGNIFICATION); // Resize
 	imageParser.imageShow("Map");
 	cv::waitKey(0);
 

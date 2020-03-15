@@ -29,7 +29,7 @@ public:
 	}
 
 	// Astar algorithm
-	void astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, int pathWeight, int elevationWeight, int euclidianWeight);
+	void astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight);
 
 private:
 
@@ -40,13 +40,13 @@ private:
 	};
 
 	// Calculate the cost of the node based on the path (distance which needs to be driven to get to node)
-	double calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int pathWeight, int elevationWeight);
+	double calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, double pathWeight, double elevationWeight);
 
 	// Calculate the heuristics (Euclidian distance, Elevation)
-	double calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goaleY, int elevationWeight, int euclidianWeight);
+	double calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goalY, double elevationWeight, double euclidianWeight);
 
 	// Open the nodes adjasent the current node
-	void expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, int pathWeight, int elevationWeight, int euclidianWeight);
+	void expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight);
 
 	void traceBackPath(ANode nodeStart, ANode nodeCurrent);
 
