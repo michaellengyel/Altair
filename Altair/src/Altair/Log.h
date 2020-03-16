@@ -21,6 +21,8 @@ namespace Altair {
 	};
 	
 }
+// Init functon
+#define ALTAIR_LOG_INIT Altair::Log::Init()
 
 // Core log macros
 #define ALTAIR_CORE_TRACE(...) ::Altair::Log::GetCoreLogger()->trace(__VA_ARGS__)

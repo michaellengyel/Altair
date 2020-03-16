@@ -2,6 +2,8 @@
 
 void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
 
+	ALTAIR_CORE_TRACE("Starting A-Star Algorithm.");
+
 	// Initializing the Start and End node:
 	nodeStart = ANode(nodeX, nodeY, nodeX, nodeY, imageGraph.getPixelValue(nodeX, nodeY));
 	nodeEnd = ANode(goalX, goalY, 0, 0, imageGraph.getPixelValue(goalX, goalY));
@@ -65,14 +67,23 @@ void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, i
 		}
 
 		// Keeping track of open and closed setSize
-		cout << openSet.size() << ", " << closedSet.size() << endl;
+		//cout << openSet.size() << ", " << closedSet.size() << endl;
+		ALTAIR_CORE_INFO("OpenSet: {0}, ClosedSet: {1}", openSet.size(), closedSet.size());
 		
 	}
 
+	ALTAIR_CORE_TRACE("Finishing A-Star Algorithm.");
+
+	ALTAIR_CORE_TRACE("Tracing Back Final Path.");
 	traceBackPath(nodeStart, nodeCurrent);
+
+	ALTAIR_CORE_TRACE("Generating Cleaned Final Set.");
 	convertfinalSetToCleaned();
+
+	ALTAIR_CORE_TRACE("Generating Closed Final Set.");
 	convertClosedSetToCleaned();
-	drawBackPath(imageGraph);
+
+	//drawBackPath(imageGraph);
 
 }
 
@@ -118,6 +129,7 @@ double AStar::calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANod
 }
 
 void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
+
 	// local variables:
 	int nodeCurrentX = nodeCurrent.getNodeX();
 	int nodeCurrentY = nodeCurrent.getNodeY();
@@ -168,11 +180,11 @@ void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y,
 			bool newNodeLesser = (openSet.at(openedNodeID).getNodeCost() < node.getNodeCost());
 
 			// Check if node already exists, if it does and is less efficient, replace
-			if (xCoordsMatch && yCoordsMatch && newNodeGreater) {
+			if ((xCoordsMatch && yCoordsMatch) && newNodeGreater) {
 				openSet.at(openedNodeID) = node;
 			}
 			// If node already exists, and is more efficient, do nothing
-			else if (xCoordsMatch && yCoordsMatch && newNodeLesser) {
+			else if ((xCoordsMatch && yCoordsMatch) && newNodeLesser) {
 				// Do nothing
 			}
 			// if it does not exit, add to open set
@@ -229,9 +241,11 @@ void AStar::convertClosedSetToCleaned() {
 
 void AStar::drawBackPath(ImageGraph& imageParserArtist) {
 
+	/*
 	for (int i = 0; i < finalSet.size(); i++) {
-		//imageParserArtist.imageDrawLine(finalSet.at(i).getNodeX(), finalSet.at(i).getNodeY(), finalSet.at(i).getNodeX(), finalSet.at(i).getNodeY(), 0, 255, 0, 1);
+		imageParserArtist.imageDrawLine(finalSet.at(i).getNodeX(), finalSet.at(i).getNodeY(), finalSet.at(i).getNodeX(), finalSet.at(i).getNodeY(), 0, 255, 0, 1);
 	}
+	*/
 
 	//imageParserArtist.userResize(4);
 	//imageParserArtist.imageShow("Lidar Based Topologial Terrain Map");

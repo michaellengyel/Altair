@@ -6,14 +6,12 @@
 #define Astar_h
 
 #include "Core.h"
+#include "Log.h"
+#include "ANode.h"
+#include "ImageGraph.h"
 
 #include <vector>
 #include <iterator>
-#include "ANode.h"
-#include "ImageGraph.h"
-//#include "ImageParser.h"
-
-//using namespace std;
 
 class ALTAIR_API AStar {
 public:
