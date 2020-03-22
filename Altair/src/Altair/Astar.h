@@ -13,6 +13,8 @@
 #include <vector>
 #include <iterator>
 
+namespace Altair {
+
 class ALTAIR_API AStar {
 public:
 
@@ -27,7 +29,7 @@ public:
 	}
 
 	// Astar algorithm
-	void astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight);
+	void run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight);
 
 private:
 
@@ -78,5 +80,7 @@ public:
 	std::vector<Point> closedSetClean;
 
 };
+
+}
 
 #endif

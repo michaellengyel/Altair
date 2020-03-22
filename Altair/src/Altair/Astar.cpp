@@ -1,6 +1,11 @@
+// Preprocessor used to remove logging from UnitTest Project.
+# define UNIT_TEST
+
 #include "AStar.h"
 
-void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
+namespace Altair {
+
+void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
 
 	ALTAIR_CORE_TRACE("Starting A-Star Algorithm.");
 
@@ -21,7 +26,7 @@ void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, i
 				nodeCurrent = openSet.at(i);
 			}
 		}
-		
+
 		// Artist
 		//imageGraphArtist.imageDrawLine(nodeStart.getNodeX(), nodeStart.getNodeY(), nodeStart.getNodeX(), nodeStart.getNodeY(), 0, 0, 255, 1);
 		//imageGraphArtist.imageDrawLine(nodeEnd.getNodeX(), nodeEnd.getNodeY(), nodeEnd.getNodeX(), nodeEnd.getNodeY(), 0, 0, 255, 1);
@@ -69,7 +74,7 @@ void AStar::astarAlgo(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, i
 		// Keeping track of open and closed setSize
 		//cout << openSet.size() << ", " << closedSet.size() << endl;
 		ALTAIR_CORE_INFO("OpenSet: {0}, ClosedSet: {1}", openSet.size(), closedSet.size());
-		
+
 	}
 
 	ALTAIR_CORE_TRACE("Finishing A-Star Algorithm.");
@@ -91,7 +96,7 @@ double AStar::calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, 
 
 	bool xAdjacent = (nodeCurrent.getNodeX() == node.getNodeX());
 	bool yAdjacent = (nodeCurrent.getNodeY() == node.getNodeY());
-	
+
 	double nodePathCost = nodeCurrent.getNodePathCost();
 	int nodeElevation = node.getElevation();
 	int nodeCurrentElevation = nodeCurrent.getElevation();
@@ -133,12 +138,12 @@ void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y,
 	// local variables:
 	int nodeCurrentX = nodeCurrent.getNodeX();
 	int nodeCurrentY = nodeCurrent.getNodeY();
-	
+
 	// Check if node to be created is not outside the boundary of the image
 	bool rightFree = (nodeCurrentX + x < imageGraph.getImageWidth());
 	bool topFree = (nodeCurrentY + y >= 0);
 	bool leftFree = (nodeCurrentX + x >= 0);
-	bool bottomFree = (nodeCurrentY +   y < imageGraph.getImageHeight());
+	bool bottomFree = (nodeCurrentY + y < imageGraph.getImageHeight());
 
 	if ((rightFree && topFree) && (leftFree && bottomFree)) {
 		// Iterate through closed Set to check if the node we are about to create has already been expanded.
@@ -152,7 +157,7 @@ void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y,
 				break;
 			}
 		}
-		
+
 		// If nodeIsExpended is false, check if it is on the open List
 		bool nodeIsOpened = false;
 		int openedNodeID = 0;
@@ -219,6 +224,9 @@ void AStar::traceBackPath(ANode nodeStart, ANode nodeCurrent) {
 			startReached = true;
 		}
 	}
+
+	finalSet.push_back(nodeStart);
+
 }
 
 void AStar::convertfinalSetToCleaned() {
@@ -251,5 +259,7 @@ void AStar::drawBackPath(ImageGraph& imageParserArtist) {
 	//imageParserArtist.imageShow("Lidar Based Topologial Terrain Map");
 	//imageParserArtist.userWaitKey(60000, 'c');
 	//imageParserArtist.userResize(1);
-	
+
+}
+
 }

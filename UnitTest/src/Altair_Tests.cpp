@@ -3,29 +3,374 @@
 
 namespace Altair {
 
-ALTAIR_API Astar;
+ALTAIR_API AStar;
 
-TEST(Node_Tests, absoluteLength_test)
+TEST(Astar_Tests, Top_U_Turn_Test_Clockwise)
 {
-	Altair::Node node(1, 1, 1);
-	EXPECT_DOUBLE_EQ(1.732050807568877, node.absoluteLength());
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = {{0, 0, 0},{0, 255, 0},{0, 255, 0}};
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 0;
+	int nodeY = 2;
+	int goalX = 2;
+	int goalY = 2;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 2);
 }
 
-TEST(Astar_Tests, Run_test)
+TEST(Astar_Tests, Top_U_Turn_Test_Counter_Clockwise)
 {
-	int data[] = { 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-	int size = 9;
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 0, 0, 0 },{ 0, 255, 0 },{ 0, 255, 0 } };
 
-	ALTAIR_API Astar;
-	Altair::Astar astar;
-	EXPECT_DOUBLE_EQ(5.196152422706631880582339, astar.Run(data, size));
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 2;
+	int nodeY = 2;
+	int goalX = 0;
+	int goalY = 2;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 2);
 }
 
-
-TEST(Visuals_Tests, visualsTestFunction_test)
+TEST(Astar_Tests, Left_U_Turn_Test_Clockwise)
 {
-	Altair::Visuals visuals;
-	EXPECT_DOUBLE_EQ(2, visuals.visualsTestFunction(1, 1));
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 0, 0, 0 },{ 0, 255, 255 },{ 0, 0, 0 } };
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 2;
+	int nodeY = 2;
+	int goalX = 2;
+	int goalY = 0;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 2);
+}
+
+TEST(Astar_Tests, Left_U_Turn_Test_Counter_Clockwise)
+{
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 0, 0, 0 },{ 0, 255, 255 },{ 0, 0, 0 } };
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 2;
+	int nodeY = 0;
+	int goalX = 2;
+	int goalY = 2;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 0);
+}
+
+TEST(Astar_Tests, Bottom_U_Turn_Test_Clockwise)
+{
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 0, 255, 0 },{ 0, 255, 0 },{ 0, 0, 0 } };
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 2;
+	int nodeY = 0;
+	int goalX = 0;
+	int goalY = 0;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 0);
+}
+
+TEST(Astar_Tests, Bottom_U_Turn_Test_Counter_Clockwise)
+{
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 0, 255, 0 },{ 0, 255, 0 },{ 0, 0, 0 } };
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 0;
+	int nodeY = 0;
+	int goalX = 2;
+	int goalY = 0;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 0);
+}
+
+TEST(Astar_Tests, Right_U_Turn_Test_Clockwise)
+{
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 0, 0, 0 },{ 255, 255, 0 },{ 0, 0, 0 } };
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 0;
+	int nodeY = 0;
+	int goalX = 0;
+	int goalY = 2;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 0);
+}
+
+TEST(Astar_Tests, Right_U_Turn_Test_Counter_Clockwise)
+{
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 0, 0, 0 },{ 255, 255, 0 },{ 0, 0, 0 } };
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 0;
+	int nodeY = 2;
+	int goalX = 0;
+	int goalY = 0;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 2);
 }
 
 }

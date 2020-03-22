@@ -78,7 +78,8 @@ project "System"
 	includedirs
 	{
 		"Altair/vendor/spdlog/include",
-		"Altair/src"
+		"Altair/src",
+		"C:/opencv/build/include"
 	}
 
 	links

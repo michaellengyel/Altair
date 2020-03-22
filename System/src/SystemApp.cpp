@@ -43,8 +43,8 @@ int main(int argc, char** argv) {
 	const int IMAGE_MAGNIFICATION = 8;
 
 	// AStar algorithm
-	AStar astar;
-	astar.astarAlgo(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	Altair::AStar astar;
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
 
 	ALTAIR_WARN("Drawing Closed Set.");
 	for (int i = 0; i < astar.closedSetClean.size(); i++) {
