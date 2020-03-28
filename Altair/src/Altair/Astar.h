@@ -19,17 +19,22 @@ class ALTAIR_API AStar {
 public:
 
 	// Default C'tor
-	AStar() {
-
-	}
+	AStar();
 
 	// Default Destructor
-	~AStar() {
-
-	}
+	~AStar();
 
 	// Astar algorithm
 	void run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight);
+
+	// Calculate the Path Length by summing all distances between the final path's nodes.
+	void calculatePathLength(double verticalProportion, double horizontalProportion);
+
+	// Calculate the Delta Elevation by summing all differenced between the final path's nodes.
+	void calculateDeltaElevation();
+
+	// Calculate the energy needed to traverse the final path using G, Mass, Rolling Resistance.
+	void calculateEnergy(double gravity, double mass, double rollingResistance, double verticalProportion, double horizontalProportion);
 
 private:
 
@@ -78,6 +83,15 @@ public:
 
 	// Container for CLOSED set cleaned
 	std::vector<Point> closedSetClean;
+
+	// Variable for holding the total length of the path
+	double pathLength;
+
+	// Variable for holding the delta elevation
+	double deltaElevation;
+
+	// Variable for holding the net energy
+	double netEnergy;
 
 };
 

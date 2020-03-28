@@ -1,9 +1,17 @@
 // Preprocessor used to remove logging from UnitTest Project.
-# define UNIT_TEST
+// #define UNIT_TEST
 
 #include "AStar.h"
 
 namespace Altair {
+
+AStar::AStar() : pathLength(0.0), deltaElevation(0.0), netEnergy(0.0) {
+
+}
+
+AStar::~AStar() {
+
+}
 
 void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
 
@@ -245,6 +253,83 @@ void AStar::convertClosedSetToCleaned() {
 		point.yCoord = closedSet.at(i).getNodeY();
 		closedSetClean.push_back(point);
 	}
+}
+
+void AStar::calculatePathLength(double verticalProportion, double horizontalProportion) {
+	
+	for (int i = 1; i < finalSet.size(); i++) {
+
+		bool xAdjacent = (finalSet.at(i - 1).getNodeX() == finalSet.at(i).getNodeX());
+		bool yAdjacent = (finalSet.at(i - 1).getNodeY() == finalSet.at(i).getNodeY());
+
+		//double nodePathCost = nodeCurrent.getNodePathCost();
+		int nodeElevation = finalSet.at(i - 1).getElevation();
+		int nodeCurrentElevation = finalSet.at(i).getElevation();
+		int deltaNodeElevation = abs(nodeElevation - nodeCurrentElevation);
+		//double deltaNodeElevationPow = pow((nodeElevation - nodeCurrentElevation), 2);
+
+		// If node is next to parent node (1) plus the delta elevation
+		if (xAdjacent || yAdjacent) {
+			// Where 1 is pow(1, 2)
+			pathLength += sqrt(pow((1 * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
+		}
+		// Else its diagonal (1.4) plus the delta elevation
+		else {
+			// Where 2 is pow(1.414, 2)
+			pathLength += sqrt(pow((SQRTWO * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
+		}
+	}
+}
+
+void AStar::calculateDeltaElevation() {
+
+	//deltaElevation = finalSet.at(0).getElevation();
+
+	for (int i = 1; i < finalSet.size(); i++) {
+		deltaElevation += (finalSet.at(i - 1).getElevation() - finalSet.at(i).getElevation());
+	}
+
+	deltaElevation - finalSet.at(0).getElevation();
+}
+
+void AStar::calculateEnergy(double gravity, double mass, double rollingResistance, double verticalProportion, double horizontalProportion) {
+
+	for (int i = 1; i < finalSet.size(); i++) {
+
+		double deltaDistance = 0;
+		double alpha = 0;
+
+		bool xAdjacent = (finalSet.at(i - 1).getNodeX() == finalSet.at(i).getNodeX());
+		bool yAdjacent = (finalSet.at(i - 1).getNodeY() == finalSet.at(i).getNodeY());
+
+		//double nodePathCost = nodeCurrent.getNodePathCost();
+		int nodeElevation = finalSet.at(i - 1).getElevation();
+		int nodeCurrentElevation = finalSet.at(i).getElevation();
+		int deltaNodeElevation = abs(nodeElevation - nodeCurrentElevation);
+
+		// If node is next to parent node (1) plus the delta elevation
+		if (xAdjacent || yAdjacent) {
+			// Where 1 is pow(1, 2)
+			deltaDistance = sqrt(pow((1 * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
+			alpha = atan(((nodeElevation - nodeCurrentElevation) * verticalProportion) / (1 * horizontalProportion));
+		}
+		// Else its diagonal (1.4) plus the delta elevation
+		else {
+			// Where 2 is pow(1.414, 2)
+			deltaDistance = sqrt(pow((SQRTWO * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
+			alpha = atan(((nodeElevation - nodeCurrentElevation) * verticalProportion) / (SQRTWO * horizontalProportion));
+		}
+
+		double gradeResistanceForce = gravity * mass * sin(alpha);
+		double rollingResistanceForce = gravity * mass * rollingResistance;
+		double netForce = gradeResistanceForce + rollingResistanceForce;
+
+		double deltaEnergy = 0;
+		deltaEnergy = netForce * deltaDistance;
+
+		netEnergy += deltaEnergy;
+	}
+
 }
 
 void AStar::drawBackPath(ImageGraph& imageParserArtist) {
