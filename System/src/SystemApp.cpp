@@ -48,7 +48,7 @@ int main(int argc, char** argv) {
 
 	astar.calculatePathLength(1, 10);
 	astar.calculateDeltaElevation();
-	astar.calculateEnergy(9.81, 10, 0.5, 1, 10);
+	astar.calculateEnergy(9.81, 100, 0., 1, 10);
 
 
 	ALTAIR_CORE_INFO("Total length of path: {0}", astar.pathLength);
@@ -57,7 +57,10 @@ int main(int argc, char** argv) {
 
 	ALTAIR_WARN("Drawing Closed Set.");
 	for (int i = 0; i < astar.closedSetClean.size(); i++) {
-		imageParser.imageDrawLine(astar.closedSetClean.at(i).xCoord, astar.closedSetClean.at(i).yCoord, astar.closedSetClean.at(i).xCoord, astar.closedSetClean.at(i).yCoord, 0, 0, 255, 1);
+
+		int colorWeight = imageParser.getPixelValue(astar.closedSetClean.at(i).xCoord, astar.closedSetClean.at(i).yCoord);
+
+		imageParser.imageDrawLine(astar.closedSetClean.at(i).xCoord, astar.closedSetClean.at(i).yCoord, astar.closedSetClean.at(i).xCoord, astar.closedSetClean.at(i).yCoord, 0, 0, colorWeight, 1);
 		imageParser.userResize(IMAGE_MAGNIFICATION);
 		imageParser.imageShow("Map");
 		cv::waitKey(1);
