@@ -36,6 +36,9 @@ public:
 	// Calculate the energy needed to traverse the final path using G, Mass, Rolling Resistance.
 	void calculateEnergy(double gravity, double mass, double rollingResistance, double verticalProportion, double horizontalProportion);
 
+	// Calculate the energy needed to traverse the final path using G, Mass, Rolling Resistance without energy regeneration.
+	void calculateNeededEnergy(double gravity, double mass, double rollingResistance, double verticalProportion, double horizontalProportion);
+
 private:
 
 	// A struct used to represent the node as a x and y coordinate when passing the path back to the user (system)
@@ -92,6 +95,9 @@ public:
 
 	// Variable for holding the net energy
 	double netEnergy;
+
+	// Variable for holding the net needed energy
+	double netNeededEnergy;
 
 };
 

@@ -1,11 +1,11 @@
 // Preprocessor used to remove logging from UnitTest Project.
-// #define UNIT_TEST
+#define UNIT_TEST
 
 #include "AStar.h"
 
 namespace Altair {
 
-AStar::AStar() : pathLength(0.0), deltaElevation(0.0), netEnergy(0.0) {
+AStar::AStar() : pathLength(0.0), deltaElevation(0.0), netEnergy(0.0), netNeededEnergy(0.0) {
 
 }
 
@@ -329,7 +329,53 @@ void AStar::calculateEnergy(double gravity, double mass, double rollingResistanc
 
 		netEnergy += deltaEnergy;
 	}
+}
 
+void AStar::calculateNeededEnergy(double gravity, double mass, double rollingResistance, double verticalProportion, double horizontalProportion) {
+
+	for (int i = 1; i < finalSet.size(); i++) {
+
+		double deltaDistance = 0;
+		double alpha = 0;
+
+		bool xAdjacent = (finalSet.at(i - 1).getNodeX() == finalSet.at(i).getNodeX());
+		bool yAdjacent = (finalSet.at(i - 1).getNodeY() == finalSet.at(i).getNodeY());
+
+		//double nodePathCost = nodeCurrent.getNodePathCost();
+		int nodeElevation = finalSet.at(i - 1).getElevation();
+		int nodeCurrentElevation = finalSet.at(i).getElevation();
+		int deltaNodeElevation = abs(nodeElevation - nodeCurrentElevation);
+
+		// If node is next to parent node (1) plus the delta elevation
+		if (xAdjacent || yAdjacent) {
+			// Where 1 is pow(1, 2)
+			deltaDistance = sqrt(pow((1 * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
+			alpha = atan(((nodeElevation - nodeCurrentElevation) * verticalProportion) / (1 * horizontalProportion));
+		}
+		// Else its diagonal (1.4) plus the delta elevation
+		else {
+			// Where 2 is pow(1.414, 2)
+			deltaDistance = sqrt(pow((SQRTWO * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
+			alpha = atan(((nodeElevation - nodeCurrentElevation) * verticalProportion) / (SQRTWO * horizontalProportion));
+		}
+
+		double gradeResistanceForce = gravity * mass * sin(alpha);
+		double rollingResistanceForce = gravity * mass * rollingResistance;
+		double netForce;
+
+		// Handle the case where rolling down hill is generating energy, but no regenerative breaking available.
+		if ((gradeResistanceForce + rollingResistanceForce) >= 0) {
+			netForce = gradeResistanceForce + rollingResistanceForce;
+		}
+		else {
+			netForce = 0;
+		}
+
+		double deltaEnergy = 0;
+		deltaEnergy = netForce * deltaDistance;
+
+		netNeededEnergy += deltaEnergy;
+	}
 }
 
 void AStar::drawBackPath(ImageGraph& imageParserArtist) {
