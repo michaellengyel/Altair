@@ -543,4 +543,106 @@ TEST(Astar_Tests, Energy_Calculation_2_3D)
 	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 0);
 }
 
+// Testing Needed Energy Calculaton functions
+TEST(Astar_Tests, Energy_Needed_Calculation_1_3D)
+{
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 255, 5, 0 },{ 10, 255, 255 },{ 255, 3, 3 } };
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 2;
+	int nodeY = 0;
+	int goalX = 2;
+	int goalY = 2;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.calculatePathLength(1, 10);
+	astar.calculateNeededEnergy(10, 10, 0.5, 1, 10);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+	EXPECT_DOUBLE_EQ(astar.pathLength, 51.960073725558445);
+	EXPECT_DOUBLE_EQ(astar.netNeededEnergy, 2898.0036862779225);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 0);
+}
+
+// Testing Needed Energy Calculaton functions
+TEST(Astar_Tests, Energy_Needed_Calculation_2_3D)
+{
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 8, 255, 10 },{ 4, 255, 10 },{ 255, 2, 255 } };
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 2;
+	int nodeY = 0;
+	int goalX = 0;
+	int goalY = 0;
+	double pathWeight = 1;
+	double elevationWeight = 1;
+	double euclidianWeight = 1;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.calculatePathLength(1, 10);
+	astar.calculateNeededEnergy(9.81, 100, 0.2, 1, 10);
+
+	EXPECT_EQ(astar.finalSetClean.size(), 5);
+	EXPECT_DOUBLE_EQ(astar.pathLength, 51.301263280626628);
+	EXPECT_DOUBLE_EQ(astar.netNeededEnergy, 12763.435185679795);
+
+	EXPECT_EQ(astar.finalSetClean.at(0).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(0).yCoord, 0);
+
+	EXPECT_EQ(astar.finalSetClean.at(1).xCoord, 0);
+	EXPECT_EQ(astar.finalSetClean.at(1).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(2).xCoord, 1);
+	EXPECT_EQ(astar.finalSetClean.at(2).yCoord, 2);
+
+	EXPECT_EQ(astar.finalSetClean.at(3).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(3).yCoord, 1);
+
+	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 2);
+	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 0);
+}
+
 }
