@@ -25,7 +25,7 @@ public:
 	~AStar();
 
 	// Astar algorithm
-	void run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight);
+	void run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight, double maxGrade);
 
 	// Calculate the Path Length by summing all distances between the final path's nodes.
 	void calculatePathLength(double verticalProportion, double horizontalProportion);
@@ -54,7 +54,7 @@ private:
 	double calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goalY, double elevationWeight, double euclidianWeight);
 
 	// Open the nodes adjasent the current node
-	void expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight);
+	void expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight, double maxGrade);
 
 	void traceBackPath(ANode nodeStart, ANode nodeCurrent);
 

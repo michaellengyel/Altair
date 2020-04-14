@@ -1,5 +1,5 @@
 // Preprocessor used to remove logging from UnitTest Project.
-#define UNIT_TEST
+// #define UNIT_TEST
 
 #include "AStar.h"
 
@@ -13,7 +13,7 @@ AStar::~AStar() {
 
 }
 
-void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
+void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight, double maxGrade) {
 
 	ALTAIR_CORE_TRACE("Starting A-Star Algorithm.");
 
@@ -50,25 +50,25 @@ void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goa
 			break;
 		}
 
-		// Add the current node to the closed set
+		// Add the current node to the closed set 
 		closedSet.push_back(nodeCurrent);
 
 		// RIGHT
-		expandNode(imageGraph, nodeCurrent, 1, 0, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+		expandNode(imageGraph, nodeCurrent, 1, 0, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 		// TOP RIGHT
-		expandNode(imageGraph, nodeCurrent, 1, -1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+		expandNode(imageGraph, nodeCurrent, 1, -1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 		// TOP
-		expandNode(imageGraph, nodeCurrent, 0, -1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+		expandNode(imageGraph, nodeCurrent, 0, -1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 		// TOP LEFT
-		expandNode(imageGraph, nodeCurrent, -1, -1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+		expandNode(imageGraph, nodeCurrent, -1, -1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 		// LEFT
-		expandNode(imageGraph, nodeCurrent, -1, 0, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+		expandNode(imageGraph, nodeCurrent, -1, 0, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 		// BOTTOM LEFT
-		expandNode(imageGraph, nodeCurrent, -1, 1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+		expandNode(imageGraph, nodeCurrent, -1, 1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 		// BOTTOM
-		expandNode(imageGraph, nodeCurrent, 0, 1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+		expandNode(imageGraph, nodeCurrent, 0, 1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 		// BOTTOM RIGHT
-		expandNode(imageGraph, nodeCurrent, 1, 1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+		expandNode(imageGraph, nodeCurrent, 1, 1, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 
 
 		// If a node has been expanded, erase from open set
@@ -85,16 +85,34 @@ void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goa
 
 	}
 
-	ALTAIR_CORE_TRACE("Finishing A-Star Algorithm.");
+	// In case of finding a path
+	if (nodeCurrent.getNodeX() == nodeEnd.getNodeX() && nodeCurrent.getNodeY() == nodeEnd.getNodeY()) {
+		ALTAIR_CORE_TRACE("Finishing A-Star Algorithm.");
 
-	ALTAIR_CORE_TRACE("Tracing Back Final Path.");
-	traceBackPath(nodeStart, nodeCurrent);
+		ALTAIR_CORE_TRACE("Tracing Back Final Path.");
+		traceBackPath(nodeStart, nodeCurrent);
 
-	ALTAIR_CORE_TRACE("Generating Cleaned Final Set.");
-	convertfinalSetToCleaned();
+		ALTAIR_CORE_TRACE("Generating Cleaned Final Set.");
+		convertfinalSetToCleaned();
 
-	ALTAIR_CORE_TRACE("Generating Closed Final Set.");
-	convertClosedSetToCleaned();
+		ALTAIR_CORE_TRACE("Generating Closed Final Set.");
+		convertClosedSetToCleaned();
+	}
+	// In case of no path existing
+	else {
+		ALTAIR_CORE_ERROR("No Solution Exists.");
+
+		ALTAIR_CORE_TRACE("Tracing Back Final Path.");
+		//traceBackPath(nodeStart, nodeCurrent);
+		finalSet.empty();
+
+		ALTAIR_CORE_TRACE("Generating Cleaned Final Set.");
+		convertfinalSetToCleaned();
+
+		ALTAIR_CORE_TRACE("Generating Closed Final Set.");
+		convertClosedSetToCleaned();
+	}
+
 
 	//drawBackPath(imageGraph);
 
@@ -141,7 +159,7 @@ double AStar::calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANod
 	return nodeCost;
 }
 
-void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
+void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight, double maxGrade) {
 
 	// local variables:
 	int nodeCurrentX = nodeCurrent.getNodeX();
@@ -153,7 +171,43 @@ void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y,
 	bool leftFree = (nodeCurrentX + x >= 0);
 	bool bottomFree = (nodeCurrentY + y < imageGraph.getImageHeight());
 
+	// Execute check
 	if ((rightFree && topFree) && (leftFree && bottomFree)) {
+
+		// TODO: Refactor this following if statement as a function.
+		// Check if node to be create has a steepness above a treshhold defined as y/x aka vertical/horizontal
+		// This should only be a restricition for uphill
+		// Value can never be 1, so '1' is used to diactivat the calculations
+		if (maxGrade != 1) {
+
+			bool xAdjacent = (nodeCurrentX == imageGraph.getPixelValue(nodeCurrentX + x, nodeCurrentY + y));
+			bool yAdjacent = (nodeCurrentY == imageGraph.getPixelValue(nodeCurrentX + x, nodeCurrentY + y));
+
+			//double nodePathCost = nodeCurrent.getNodePathCost();
+			int nodeElevation = imageGraph.getPixelValue(nodeCurrentX + x, nodeCurrentY + y);
+			int nodeCurrentElevation = nodeCurrent.getElevation();
+			int deltaNodeElevation = abs(nodeElevation - nodeCurrentElevation);
+			//double deltaNodeElevationPow = pow((nodeElevation - nodeCurrentElevation), 2);
+
+			// If node is next to parent node (1) plus the delta elevation
+			if (xAdjacent || yAdjacent) {
+				// Where 1 is pow(1, 2)
+				pathLength = sqrt(pow((1 * pathWeight), 2) + pow((deltaNodeElevation * elevationWeight), 2));
+			}
+			// Else its diagonal (1.4) plus the delta elevation
+			else {
+				// Where 2 is pow(1.414, 2)
+				pathLength = sqrt(pow((SQRTWO * pathWeight), 2) + pow((deltaNodeElevation * elevationWeight), 2));
+			}
+
+			double currentGrade = deltaNodeElevation / pathLength;
+
+			if (currentGrade >= maxGrade) {
+				// If grade it steeper then maxGrade, exit the function, do not expand the node.
+				return;
+			}
+		}
+
 		// Iterate through closed Set to check if the node we are about to create has already been expanded.
 		bool nodeIsExpended = false;
 		int sizeClosed = closedSet.size() - 1;
@@ -257,39 +311,51 @@ void AStar::convertClosedSetToCleaned() {
 
 void AStar::calculatePathLength(double verticalProportion, double horizontalProportion) {
 	
-	for (int i = 1; i < finalSet.size(); i++) {
+	// Check if final set is empty or not
+	if (!finalSet.empty()) {
 
-		bool xAdjacent = (finalSet.at(i - 1).getNodeX() == finalSet.at(i).getNodeX());
-		bool yAdjacent = (finalSet.at(i - 1).getNodeY() == finalSet.at(i).getNodeY());
+		for (int i = 1; i < finalSet.size(); i++) {
 
-		//double nodePathCost = nodeCurrent.getNodePathCost();
-		int nodeElevation = finalSet.at(i - 1).getElevation();
-		int nodeCurrentElevation = finalSet.at(i).getElevation();
-		int deltaNodeElevation = abs(nodeElevation - nodeCurrentElevation);
-		//double deltaNodeElevationPow = pow((nodeElevation - nodeCurrentElevation), 2);
+			bool xAdjacent = (finalSet.at(i - 1).getNodeX() == finalSet.at(i).getNodeX());
+			bool yAdjacent = (finalSet.at(i - 1).getNodeY() == finalSet.at(i).getNodeY());
 
-		// If node is next to parent node (1) plus the delta elevation
-		if (xAdjacent || yAdjacent) {
-			// Where 1 is pow(1, 2)
-			pathLength += sqrt(pow((1 * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
+			//double nodePathCost = nodeCurrent.getNodePathCost();
+			int nodeElevation = finalSet.at(i - 1).getElevation();
+			int nodeCurrentElevation = finalSet.at(i).getElevation();
+			int deltaNodeElevation = abs(nodeElevation - nodeCurrentElevation);
+			//double deltaNodeElevationPow = pow((nodeElevation - nodeCurrentElevation), 2);
+
+			// If node is next to parent node (1) plus the delta elevation
+			if (xAdjacent || yAdjacent) {
+				// Where 1 is pow(1, 2)
+				pathLength += sqrt(pow((1 * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
+			}
+			// Else its diagonal (1.4) plus the delta elevation
+			else {
+				// Where 2 is pow(1.414, 2)
+				pathLength += sqrt(pow((SQRTWO * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
+			}
 		}
-		// Else its diagonal (1.4) plus the delta elevation
-		else {
-			// Where 2 is pow(1.414, 2)
-			pathLength += sqrt(pow((SQRTWO * horizontalProportion), 2) + pow((deltaNodeElevation * verticalProportion), 2));
-		}
+	}
+	// If there is no solution, no path
+	else {
+		pathLength = 0;
 	}
 }
 
 void AStar::calculateDeltaElevation() {
 
-	//deltaElevation = finalSet.at(0).getElevation();
+	if (!finalSet.empty()) {
+		for (int i = 1; i < finalSet.size(); i++) {
+			deltaElevation += (finalSet.at(i - 1).getElevation() - finalSet.at(i).getElevation());
+		}
 
-	for (int i = 1; i < finalSet.size(); i++) {
-		deltaElevation += (finalSet.at(i - 1).getElevation() - finalSet.at(i).getElevation());
+		deltaElevation - finalSet.at(0).getElevation();
+	}
+	else {
+		deltaElevation = 0;
 	}
 
-	deltaElevation - finalSet.at(0).getElevation();
 }
 
 void AStar::calculateEnergy(double gravity, double mass, double rollingResistance, double verticalProportion, double horizontalProportion) {
