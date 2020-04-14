@@ -53,6 +53,9 @@ public:
 	// Show the image
 	void imageShow(string imageName);
 
+	// Write the image to disk
+	void imageWrite(string imageName);
+
 	// waitKey function. Must be called for animation to work
 	// TODO: Uncomment the "break"
 	void userWaitKey(int time, char exitKey);

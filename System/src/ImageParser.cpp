@@ -24,6 +24,10 @@ void ImageParser::imageShow(string imageName) {
 	imshow(imageName, m_image);
 }
 
+void ImageParser::imageWrite(string imageName) {
+	imwrite(imageName, m_image);
+}
+
 void ImageParser::userWaitKey(int time, char exitKey) {
 	if (waitKey(time) == exitKey) {
 		//break;
