@@ -69,6 +69,7 @@ private:
 	ANode nodeCurrent;
 
 	const double SQRTWO = 1.414213562373095;
+	const double PI = 3.141592653589793;
 
 	// Container for the OPEN set
 	vector<ANode> openSet;

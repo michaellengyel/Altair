@@ -178,7 +178,7 @@ void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y,
 		// Check if node to be create has a steepness above a treshhold defined as y/x aka vertical/horizontal
 		// This should only be a restricition for uphill
 		// Value can never be 1, so '1' is used to diactivat the calculations
-		if (maxGrade != 1) {
+		if (maxGrade != 90) {
 
 			bool xAdjacent = (nodeCurrentX == imageGraph.getPixelValue(nodeCurrentX + x, nodeCurrentY + y));
 			bool yAdjacent = (nodeCurrentY == imageGraph.getPixelValue(nodeCurrentX + x, nodeCurrentY + y));
@@ -187,22 +187,28 @@ void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y,
 			int nodeElevation = imageGraph.getPixelValue(nodeCurrentX + x, nodeCurrentY + y);
 			int nodeCurrentElevation = nodeCurrent.getElevation();
 			int deltaNodeElevation = abs(nodeElevation - nodeCurrentElevation);
+			double pathLengthX = 0;
 			//double deltaNodeElevationPow = pow((nodeElevation - nodeCurrentElevation), 2);
 
 			// If node is next to parent node (1) plus the delta elevation
 			if (xAdjacent || yAdjacent) {
 				// Where 1 is pow(1, 2)
-				pathLength = sqrt(pow((1 * pathWeight), 2) + pow((deltaNodeElevation * elevationWeight), 2));
+				pathLengthX = 1 * pathWeight;
 			}
 			// Else its diagonal (1.4) plus the delta elevation
 			else {
 				// Where 2 is pow(1.414, 2)
-				pathLength = sqrt(pow((SQRTWO * pathWeight), 2) + pow((deltaNodeElevation * elevationWeight), 2));
+				pathLengthX = SQRTWO * pathWeight;
 			}
 
-			double currentGrade = deltaNodeElevation / pathLength;
 
-			if (currentGrade >= maxGrade) {
+			double currentGrade = 0;
+			currentGrade = atan((deltaNodeElevation * elevationWeight) / pathLengthX);
+
+			double currentGradeRad = 0;
+			currentGradeRad = currentGrade * 180 / PI;
+
+			if (currentGradeRad >= maxGrade) {
 				// If grade it steeper then maxGrade, exit the function, do not expand the node.
 				return;
 			}

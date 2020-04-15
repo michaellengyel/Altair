@@ -17,7 +17,7 @@ int main(int argc, char** argv) {
 	ImageGraph;
 
 	// ImageParser reads in, stores in Mat, provides access services
-	ImageParser imageParser("res/map2.png");
+	ImageParser imageParser("res/crater.png");
 
 	// ImageGraph stores image in a 2D vector
 	ImageGraph imageGraph(imageParser.getImageWidth(), imageParser.getImageHeight());
@@ -33,16 +33,16 @@ int main(int argc, char** argv) {
 
 	// AStar algorithm parameters
 	ALTAIR_WARN("Initializing A-Star parameters...");
-	int nodeX = 0;
-	int nodeY = 0;
-	int goalX = 56;
-	int goalY = 56;
+	int nodeX = 82;
+	int nodeY = 42;
+	int goalX = 13;
+	int goalY = 104;
 	double pathWeight = 1;
-	double elevationWeight = 1;
+	double elevationWeight = 0.1;
 	double euclidianWeight = 1;
-	double maxGrade = 1;
+	double maxGrade = 35;
 
-	const int IMAGE_MAGNIFICATION = 9;
+	const int IMAGE_MAGNIFICATION = 4;
 
 	// AStar algorithm
 	ALTAIR_WARN("Initialitzing Altair Class...");
@@ -62,7 +62,11 @@ int main(int argc, char** argv) {
 	
 	
 	ALTAIR_WARN("Drawing Closed Set.");
-	for (int i = 0; i < astar.closedSetClean.size(); i++) {
+
+	imageParser.imageDrawLine(nodeX, nodeY, nodeX, nodeY, 0, 255, 0, 1);
+	imageParser.imageDrawLine(goalX, goalY, goalX, goalY, 0, 255, 0, 1);
+
+	for (int i = 1; i < astar.closedSetClean.size(); i++) {
 
 		int colorWeight = imageParser.getPixelValue(astar.closedSetClean.at(i).xCoord, astar.closedSetClean.at(i).yCoord);
 
@@ -72,10 +76,13 @@ int main(int argc, char** argv) {
 		cv::waitKey(1);
 		imageParser.userResize(1);
 	}
+
+	imageParser.imageDrawLine(nodeX, nodeY, nodeY, nodeY, 0, 255, 0, 1);
+	imageParser.imageDrawLine(goalX, goalY, goalX, goalY, 0, 255, 0, 1);
 	
 
 	ALTAIR_WARN("Writing image...");
-	imageParser.userResize(12);
+	imageParser.userResize(2);
 	imageParser.imageWrite("res/map2_OUT_Simple.png");
 	imageParser.userResize(1);
 	
@@ -89,7 +96,7 @@ int main(int argc, char** argv) {
 	}
 
 	ALTAIR_WARN("Writing image...");
-	imageParser.userResize(12);
+	imageParser.userResize(2);
 	imageParser.imageWrite("res/map2_OUT_Full.png");
 	imageParser.userResize(1);
 
