@@ -1,5 +1,5 @@
 // Preprocessor used to remove logging from UnitTest Project.
-// #define UNIT_TEST
+#define UNIT_TEST
 
 #include "AStar.h"
 
@@ -34,15 +34,6 @@ void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goa
 				nodeCurrent = openSet.at(i);
 			}
 		}
-
-		// Artist
-		//imageGraphArtist.imageDrawLine(nodeStart.getNodeX(), nodeStart.getNodeY(), nodeStart.getNodeX(), nodeStart.getNodeY(), 0, 0, 255, 1);
-		//imageGraphArtist.imageDrawLine(nodeEnd.getNodeX(), nodeEnd.getNodeY(), nodeEnd.getNodeX(), nodeEnd.getNodeY(), 0, 0, 255, 1);
-		//imageGraphArtist.imageDrawLine(nodeCurrent.getNodeX(), nodeCurrent.getNodeY(), nodeCurrent.getNodeX(), nodeCurrent.getNodeY(), 0, 255, 0, 1);
-		//imageParserArtist.userResize(4);
-		//imageGraphArtist.imageShow("Lidar Based Topologial Terrain Map");
-		//imageParserArtist.userResize(1);
-		//imageGraphArtist.userWaitKey(1, 'c');
 
 		// Breaking condition: if nodeCurrent == nodeEnd then break
 		if (nodeCurrent.getNodeX() == nodeEnd.getNodeX() && nodeCurrent.getNodeY() == nodeEnd.getNodeY()) {
@@ -80,7 +71,6 @@ void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goa
 		}
 
 		// Keeping track of open and closed setSize
-		//cout << openSet.size() << ", " << closedSet.size() << endl;
 		ALTAIR_CORE_INFO("OpenSet: {0}, ClosedSet: {1}", openSet.size(), closedSet.size());
 
 	}
@@ -103,7 +93,7 @@ void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goa
 		ALTAIR_CORE_ERROR("No Solution Exists.");
 
 		ALTAIR_CORE_TRACE("Tracing Back Final Path.");
-		//traceBackPath(nodeStart, nodeCurrent);
+
 		finalSet.empty();
 
 		ALTAIR_CORE_TRACE("Generating Cleaned Final Set.");
@@ -118,7 +108,7 @@ void AStar::run(ImageGraph& imageGraph, int nodeX, int nodeY, int goalX, int goa
 
 }
 
-double AStar::calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, double pathWeight, double elevationWeight) {
+double AStar::calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goalY, double pathWeight, double elevationWeight) {
 
 	bool xAdjacent = (nodeCurrent.getNodeX() == node.getNodeX());
 	bool yAdjacent = (nodeCurrent.getNodeY() == node.getNodeY());
@@ -126,35 +116,38 @@ double AStar::calculateNodePathCost(ImageGraph& imageGraph, ANode& nodeCurrent, 
 	double nodePathCost = nodeCurrent.getNodePathCost();
 	int nodeElevation = node.getElevation();
 	int nodeCurrentElevation = nodeCurrent.getElevation();
-	double deltaNodeElevationPow = pow((nodeElevation - nodeCurrentElevation), 2);
+	double deltaNodeElevation = (nodeElevation - nodeCurrentElevation);
 
-	// Testing if elevationWeight should not be used as a heuristic.
-	nodePathCost += (static_cast<double>(abs(node.getElevation() - nodeCurrent.getElevation())) * elevationWeight);
+	double goalElevation = imageGraph.getPixelValue(goalX, goalY);
+
+	nodePathCost += ((static_cast<double>(node.getElevation() - nodeCurrent.getElevation()))) * elevationWeight;
 
 	// If node is next to parent node (1) plus the delta elevation
 	if (xAdjacent || yAdjacent) {
 		// Where 1 is pow(1, 2)
-		nodePathCost += sqrt(1 + deltaNodeElevationPow);
+		nodePathCost += sqrt(pow((1.0 * pathWeight), 2) + pow((deltaNodeElevation * elevationWeight), 2));
 	}
 	// Else its diagonal (1.4) plus the delta elevation
 	else {
 		// Where 2 is pow(1.414, 2)
-		nodePathCost += sqrt(2 + deltaNodeElevationPow);
+		nodePathCost += sqrt(pow((SQRTWO * pathWeight), 2) + pow((deltaNodeElevation * elevationWeight), 2));
 	}
 
-	return nodePathCost * pathWeight;
+	return nodePathCost;
 }
 
-double AStar::calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goalY, double elevationWeight, double euclidianWeight) {
+double AStar::calculateNodeCost(ImageGraph& imageGraph, ANode& nodeCurrent, ANode& node, int goalX, int goalY, double pathWeight, double elevationWeight, double euclidianWeight) {
 
 	double nodeCost = 0;
-	nodeCost = nodeCurrent.getNodePathCost();
+	//nodeCost = nodeCurrent.getNodePathCost();
+	nodeCost = node.getNodePathCost();
 
 	// Calculating the height cost
-	// nodeCost += (static_cast<double>(abs(node.getElevation() - nodeCurrent.getElevation())) * elevationWeight);
+	double goalElevation = static_cast<double>(imageGraph.getPixelValue(goalX, goalY));
+	double deltaElevation = goalElevation - node.getElevation();
 
 	// Calculating the distance cost
-	nodeCost += ((sqrt(pow(node.getNodeX() - goalX, 2) + pow(node.getNodeY() - goalY, 2))) * euclidianWeight);
+	nodeCost += sqrt(pow((node.getNodeX() - goalX) * pathWeight, 2) + pow((node.getNodeY() - goalY) * pathWeight, 2) + pow((deltaElevation * elevationWeight), 2));
 
 	return nodeCost;
 }
@@ -177,7 +170,7 @@ void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y,
 		// TODO: Refactor this following if statement as a function.
 		// Check if node to be create has a steepness above a treshhold defined as y/x aka vertical/horizontal
 		// This should only be a restricition for uphill
-		// Value can never be 1, so '1' is used to diactivat the calculations
+		// Value can never be 1, so '1' is used to diactivate the calculations
 		if (maxGrade != 90) {
 
 			bool xAdjacent = (nodeCurrentX == imageGraph.getPixelValue(nodeCurrentX + x, nodeCurrentY + y));
@@ -240,12 +233,11 @@ void AStar::expandNode(ImageGraph& imageGraph, ANode& nodeCurrent, int x, int y,
 					break;
 				}
 			}
-			// Parent and child node states (todo)
 
 			// Create a new node
 			ANode node = ANode(nodeCurrentX + x, nodeCurrentY + y, nodeCurrentX, nodeCurrentY, imageGraph.getPixelValue(nodeCurrentX + x, nodeCurrentY + y));
-			node.setNodePathCost(calculateNodePathCost(imageGraph, nodeCurrent, node, pathWeight, elevationWeight));
-			node.setNodeCost(calculateNodeCost(imageGraph, nodeCurrent, node, goalX, goalY, elevationWeight, euclidianWeight));
+			node.setNodePathCost(calculateNodePathCost(imageGraph, nodeCurrent, node, goalX, goalY, pathWeight, elevationWeight));
+			node.setNodeCost(calculateNodeCost(imageGraph, nodeCurrent, node, goalX, goalY, pathWeight, elevationWeight, euclidianWeight));
 			// Node states
 			bool xCoordsMatch = (openSet.at(openedNodeID).getNodeX() == nodeCurrentX + x);
 			bool yCoordsMatch = (openSet.at(openedNodeID).getNodeY() == nodeCurrentY + y);
@@ -325,11 +317,9 @@ void AStar::calculatePathLength(double verticalProportion, double horizontalProp
 			bool xAdjacent = (finalSet.at(i - 1).getNodeX() == finalSet.at(i).getNodeX());
 			bool yAdjacent = (finalSet.at(i - 1).getNodeY() == finalSet.at(i).getNodeY());
 
-			//double nodePathCost = nodeCurrent.getNodePathCost();
 			int nodeElevation = finalSet.at(i - 1).getElevation();
 			int nodeCurrentElevation = finalSet.at(i).getElevation();
 			int deltaNodeElevation = abs(nodeElevation - nodeCurrentElevation);
-			//double deltaNodeElevationPow = pow((nodeElevation - nodeCurrentElevation), 2);
 
 			// If node is next to parent node (1) plus the delta elevation
 			if (xAdjacent || yAdjacent) {
@@ -448,21 +438,6 @@ void AStar::calculateNeededEnergy(double gravity, double mass, double rollingRes
 
 		netNeededEnergy += deltaEnergy;
 	}
-}
-
-void AStar::drawBackPath(ImageGraph& imageParserArtist) {
-
-	/*
-	for (int i = 0; i < finalSet.size(); i++) {
-		imageParserArtist.imageDrawLine(finalSet.at(i).getNodeX(), finalSet.at(i).getNodeY(), finalSet.at(i).getNodeX(), finalSet.at(i).getNodeY(), 0, 255, 0, 1);
-	}
-	*/
-
-	//imageParserArtist.userResize(4);
-	//imageParserArtist.imageShow("Lidar Based Topologial Terrain Map");
-	//imageParserArtist.userWaitKey(60000, 'c');
-	//imageParserArtist.userResize(1);
-
 }
 
 }

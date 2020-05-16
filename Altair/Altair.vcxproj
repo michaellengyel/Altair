@@ -92,7 +92,8 @@
     </Link>
     <PostBuildEvent>
       <Command>IF EXIST ..\bin\Debug-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Altair\Altair.dll ..\bin\Debug-windows-x86_64\UnitTest &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Altair\Altair.dll ..\bin\Debug-windows-x86_64\UnitTest &gt; nul)
-IF EXIST ..\bin\Debug-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Altair\Altair.dll ..\bin\Debug-windows-x86_64\System &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Altair\Altair.dll ..\bin\Debug-windows-x86_64\System &gt; nul)</Command>
+IF EXIST ..\bin\Debug-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Altair\Altair.dll ..\bin\Debug-windows-x86_64\System &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Altair\Altair.dll ..\bin\Debug-windows-x86_64\System &gt; nul)
+IF EXIST ..\bin\Debug-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Debug-windows-x86_64\Altair\Altair.dll ..\bin\Debug-windows-x86_64\Validation &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Debug-windows-x86_64\Altair\Altair.dll ..\bin\Debug-windows-x86_64\Validation &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -117,7 +118,8 @@ IF EXIST ..\bin\Debug-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bi
     </Link>
     <PostBuildEvent>
       <Command>IF EXIST ..\bin\Release-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Altair\Altair.dll ..\bin\Release-windows-x86_64\UnitTest &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Altair\Altair.dll ..\bin\Release-windows-x86_64\UnitTest &gt; nul)
-IF EXIST ..\bin\Release-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Altair\Altair.dll ..\bin\Release-windows-x86_64\System &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Altair\Altair.dll ..\bin\Release-windows-x86_64\System &gt; nul)</Command>
+IF EXIST ..\bin\Release-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Altair\Altair.dll ..\bin\Release-windows-x86_64\System &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Altair\Altair.dll ..\bin\Release-windows-x86_64\System &gt; nul)
+IF EXIST ..\bin\Release-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Release-windows-x86_64\Altair\Altair.dll ..\bin\Release-windows-x86_64\Validation &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Release-windows-x86_64\Altair\Altair.dll ..\bin\Release-windows-x86_64\Validation &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Distribution|x64'">
@@ -138,7 +140,8 @@ IF EXIST ..\bin\Release-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\
     </Link>
     <PostBuildEvent>
       <Command>IF EXIST ..\bin\Distribution-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Distribution-windows-x86_64\Altair\Altair.dll ..\bin\Distribution-windows-x86_64\UnitTest &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Distribution-windows-x86_64\Altair\Altair.dll ..\bin\Distribution-windows-x86_64\UnitTest &gt; nul)
-IF EXIST ..\bin\Distribution-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Distribution-windows-x86_64\Altair\Altair.dll ..\bin\Distribution-windows-x86_64\System &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Distribution-windows-x86_64\Altair\Altair.dll ..\bin\Distribution-windows-x86_64\System &gt; nul)</Command>
+IF EXIST ..\bin\Distribution-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Distribution-windows-x86_64\Altair\Altair.dll ..\bin\Distribution-windows-x86_64\System &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Distribution-windows-x86_64\Altair\Altair.dll ..\bin\Distribution-windows-x86_64\System &gt; nul)
+IF EXIST ..\bin\Distribution-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /I ..\bin\Distribution-windows-x86_64\Altair\Altair.dll ..\bin\Distribution-windows-x86_64\Validation &gt; nul) ELSE (xcopy /Q /Y /I ..\bin\Distribution-windows-x86_64\Altair\Altair.dll ..\bin\Distribution-windows-x86_64\Validation &gt; nul)</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -148,16 +151,12 @@ IF EXIST ..\bin\Distribution-windows-x86_64\Altair\Altair.dll\ (xcopy /Q /E /Y /
     <ClInclude Include="src\Altair\Core.h" />
     <ClInclude Include="src\Altair\ImageGraph.h" />
     <ClInclude Include="src\Altair\Log.h" />
-    <ClInclude Include="src\Altair\Node.h" />
-    <ClInclude Include="src\Altair\Visuals.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Altair\ANode.cpp" />
     <ClCompile Include="src\Altair\Astar.cpp" />
     <ClCompile Include="src\Altair\ImageGraph.cpp" />
     <ClCompile Include="src\Altair\Log.cpp" />
-    <ClCompile Include="src\Altair\Node.cpp" />
-    <ClCompile Include="src\Altair\Visuals.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

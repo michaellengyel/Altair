@@ -28,10 +28,11 @@ TEST(Astar_Tests, Top_U_Turn_Test_Clockwise)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 5);
 
@@ -74,10 +75,11 @@ TEST(Astar_Tests, Top_U_Turn_Test_Counter_Clockwise)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 5);
 
@@ -120,10 +122,11 @@ TEST(Astar_Tests, Left_U_Turn_Test_Clockwise)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 5);
 
@@ -166,10 +169,11 @@ TEST(Astar_Tests, Left_U_Turn_Test_Counter_Clockwise)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 5);
 
@@ -212,10 +216,11 @@ TEST(Astar_Tests, Bottom_U_Turn_Test_Clockwise)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 5);
 
@@ -258,10 +263,11 @@ TEST(Astar_Tests, Bottom_U_Turn_Test_Counter_Clockwise)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 5);
 
@@ -304,10 +310,11 @@ TEST(Astar_Tests, Right_U_Turn_Test_Clockwise)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 5);
 
@@ -350,10 +357,11 @@ TEST(Astar_Tests, Right_U_Turn_Test_Counter_Clockwise)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 5);
 
@@ -397,10 +405,11 @@ TEST(Astar_Tests, Calculate_Path_Length_2D)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 	astar.calculatePathLength(1, 1);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 12);
@@ -431,10 +440,11 @@ TEST(Astar_Tests, Calculate_Path_Length_3D)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 	astar.calculatePathLength(1, 1);
 
 	EXPECT_EQ(astar.finalSetClean.size(), 12);
@@ -465,10 +475,11 @@ TEST(Astar_Tests, Energy_Calculation_1_3D)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 	astar.calculatePathLength(1, 10);
 	astar.calculateEnergy(10, 10, 0.5, 1, 10);
 
@@ -516,10 +527,11 @@ TEST(Astar_Tests, Energy_Calculation_2_3D)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 	astar.calculatePathLength(1, 10);
 	astar.calculateEnergy(9.81, 100, 0.2, 1, 10);
 
@@ -541,6 +553,35 @@ TEST(Astar_Tests, Energy_Calculation_2_3D)
 
 	EXPECT_EQ(astar.finalSetClean.at(4).xCoord, 2);
 	EXPECT_EQ(astar.finalSetClean.at(4).yCoord, 0);
+}
+
+// Testing Energy Calculaton functions
+TEST(Astar_Tests, Energy_Calculation_2_3D_Example)
+{
+	const int width = 3;
+	const int height = 3;
+	int data[width][height] = { { 8, 255, 10 },{ 4, 255, 10 },{ 255, 2, 255 } };
+
+	ImageGraph imageGraph(width, height);
+
+	// Copy the image from ImageParser format to ImageGraph format
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			imageGraph.setPixelValue(i, j, data[j][i]);
+		}
+	}
+
+	// AStar algorithm parameters
+	int nodeX = 2, nodeY = 0, goalX = 0, goalY = 0;
+	double pathWeight = 1, elevationWeight = 1, euclidianWeight = 1;
+	double maxGrade = 90;
+
+	AStar astar;
+
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
+	astar.calculateEnergy(9.81, 100, 0.2, 1, 10);
+
+	EXPECT_NEAR(astar.netEnergy, 8103.3021, 0.01);
 }
 
 // Testing Needed Energy Calculaton functions
@@ -567,10 +608,11 @@ TEST(Astar_Tests, Energy_Needed_Calculation_1_3D)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 	astar.calculatePathLength(1, 10);
 	astar.calculateNeededEnergy(10, 10, 0.5, 1, 10);
 
@@ -618,10 +660,11 @@ TEST(Astar_Tests, Energy_Needed_Calculation_2_3D)
 	double pathWeight = 1;
 	double elevationWeight = 1;
 	double euclidianWeight = 1;
+	double maxGrade = 90;
 
 	AStar astar;
 
-	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight);
+	astar.run(imageGraph, nodeX, nodeY, goalX, goalY, pathWeight, elevationWeight, euclidianWeight, maxGrade);
 	astar.calculatePathLength(1, 10);
 	astar.calculateNeededEnergy(9.81, 100, 0.2, 1, 10);
 

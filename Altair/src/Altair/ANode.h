@@ -22,6 +22,7 @@ public:
 	}
 
 	// C'tor
+
 	ANode(int nodeX, int nodeY, int parentX, int parentY, int elevation) :
 		m_nodeX(nodeX),
 		m_nodeY(nodeY),
@@ -101,9 +102,7 @@ private:
 	int m_nodeY;
 	int m_parentX;
 	int m_parentY;
-
 	int m_elevation;
-
 	double m_nodePathCost;
 	double m_nodeCost;
 

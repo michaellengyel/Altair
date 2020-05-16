@@ -15,9 +15,11 @@ namespace Altair {
 
 		inline static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
 		inline static std::shared_ptr<spdlog::logger>& GetClientLogger() { return s_ClientLogger; }
+		inline static std::shared_ptr<spdlog::logger>& GetClientValLogger() { return s_ClientValLogger; }
 	private:
 		static std::shared_ptr<spdlog::logger> s_CoreLogger;
 		static std::shared_ptr<spdlog::logger> s_ClientLogger;
+		static std::shared_ptr<spdlog::logger> s_ClientValLogger;
 	};
 	
 }
@@ -51,5 +53,11 @@ namespace Altair {
 	#define ALTAIR_WARN(...) ::Altair::Log::GetClientLogger()->warn(__VA_ARGS__)
 	#define ALTAIR_ERROR(...) ::Altair::Log::GetClientLogger()->error(__VA_ARGS__)
 	#define ALTAIR_FATAL(...) ::Altair::Log::GetClientLogger()->fatal(__VA_ARGS__)
+	// Core log macros
+	#define ALTAIR_VAL_TRACE(...) ::Altair::Log::GetClientValLogger()->trace(__VA_ARGS__)
+	#define ALTAIR_VAL_INFO(...) ::Altair::Log::GetClientValLogger()->info(__VA_ARGS__)
+	#define ALTAIR_VAL_WARN(...) ::Altair::Log::GetClientValLogger()->warn(__VA_ARGS__)
+	#define ALTAIR_VAL_ERROR(...) ::Altair::Log::GetClientValLogger()->error(__VA_ARGS__)
+	#define ALTAIR_VAL_FATAL(...) ::Altair::Log::GetClientValLogger()->fatal(__VA_ARGS__)
 #endif
 
