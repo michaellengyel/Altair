@@ -1,5 +1,5 @@
 workspace "Altair"
-	architecture "x86"
+	architecture "x86_64"
 
 	configurations
 	{
@@ -44,7 +44,8 @@ project "Altair"
 		postbuildcommands
 		{
 			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/UnitTest"),
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/System")
+			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/System"),
+			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Validation")
 		}
 
 	filter "configurations:Debug"
@@ -78,7 +79,58 @@ project "System"
 	includedirs
 	{
 		"Altair/vendor/spdlog/include",
-		"Altair/src"
+		"Altair/src",
+		"C:/opencv/build/include"
+	}
+
+	links
+	{
+		"Altair"
+	}
+
+	filter "system:windows"
+		cppdialect "C++14"
+		staticruntime "On"
+		systemversion "10.0.18362.0"
+
+		defines
+		{
+			"ALTAIR_PLATFORM_WINDOWS",
+		}
+
+	filter "configurations:Debug"
+		defines "ALTAIR_DEBUG"
+		symbols "On"
+
+	filter "configurations:Release"
+		defines "ALTAIR_RELEASE"
+		optimize "On"
+
+	filter "configurations:Distribution"
+		defines "ALTAIR_DISTRIBUTION"
+		symbols "On"
+
+--Project Validation
+project "Validation"
+	location "Validation"
+	kind "ConsoleApp"
+	language "C++"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+
+	}
+
+	includedirs
+	{
+		"Altair/vendor/spdlog/include",
+		"Altair/src",
+		"C:/opencv/build/include"
 	}
 
 	links
